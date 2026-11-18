@@ -1,0 +1,141 @@
+========================================================================
+PROYECTO II - COMPILADOR + SO1 (LIS-3042)
+========================================================================
+
+REGLAS GENERALES
+- Dos personas: Persona A (lexer, autómatas, conversión) y Persona B (parser, AST, semántica, generación).
+- Ambos: pruebas, reporte, ZIP, README y su artefacto SO1 individual en inglés.
+- No usar regex para lexer/parser, ni eval, exec, ast.parse ni generadores de parsers.
+- No generar salida.py si hay error de compilación.
+- validar afd usa el AFD original; validar afn usa el AFD convertido por subconjuntos.
+- Probar siempre desde ZIP extraído en carpeta nueva, sin rutas absolutas.
+
+========================================================================
+FASE 1: 17-19 NOVIEMBRE (REVISIÓN FORMATIVA 19 NOV)
+========================================================================
+
+[LISTO] Cerrar consistencia Opción A del AFN (reporte, notebook y pruebas deben coincidir).
+    - L2: Los 4 octetos solo aceptan 0-255 entre cada octeto con un ".".
+    - Casos: 192.168.1.100 ACEPTA; 300.1.2.25 RECHAZA; 192.168.1.256 RECHAZA.
+    - Actualizar reporte: quitar "último exactamente 0 o 255".
+
+[ ] LEXER del compilador (.tc) - Persona A
+    - Tablas de transición explícitas para IDENT y NUM (recorrerlas, no regex).
+    - Tokens con tipo, lexema, linea, columna (desde 1). Token EOF.
+    - Palabras reservadas después de leer palabra completa (letx = IDENT).
+    - Símbolos simples: + - * ( ) ; =
+    - CADENA con escapes \" \\ \n \t \r; error en escape inválido y cadena sin cierre.
+    - Ignorar espacios, tabs y saltos de línea fuera de cadenas.
+    - Errores léxicos con etapa, línea, columna y motivo (sin traceback).
+    - Pruebas: >=4 errores léxicos (carácter no permitido, cadena sin cierre, escape inválido, salto de línea en cadena).
+    - Opción CLI documentada: python compilador.py --tokens ejemplos/demo.tc
+
+[ ] MÓDULO DE APOYO (automatas.py) - Persona A
+    - AFD original (IPv4) y AFN original (Opción A) como datos.
+    - Simuladores: simular_afd() y simular_afn().
+    - Convertir AFN a AFD por subconjuntos (algoritmo, no manual).
+    - Tabla de subconjuntos alcanzables, estado trampa si aparece, inicio y finales.
+    - Correspondencia estado nuevo <-> conjunto de estados originales.
+    - Función validar(modelo, cadena) -> "ACEPTA" | "RECHAZA" | "FUERA_DEL_ALFABETO".
+    - validar afd usa AFD original; validar afn usa AFD convertido.
+    - Pruebas de regresión: 12 casos por modelo (5 aceptadas, 5 rechazadas, vacía, fuera del alfabeto).
+    - Comparar esperado vs AFN original vs AFD convertido.
+
+[ ] PARSER Y AST (versión inicial) - Persona B
+    - Parser descendente recursivo según EBNF.
+    - Consumir entrada completa.
+    - Nodos: programa, declaración, salida, validación, operación binaria, literal entero, referencia a variable.
+    - Asociatividad izquierda: 8-3-1 = (8-3)-1.
+    - Paréntesis anidados (sin nodo propio).
+    - Representación textual legible del AST.
+    - Errores sintácticos con etapa, línea, columna y motivo.
+
+[ ] Documentar en reporte: tablas de conversión, correcciones Opción A, nota de que B/C/D replican A.
+
+[ ] Cada integrante: avance de su artefacto SO1 individual (inglés) y evidencias de los 4 criterios.
+
+========================================================================
+FASE 2: 20-24 NOVIEMBRE (VERSIONES CANDIDATAS 24 NOV)
+========================================================================
+
+[ ] SEMÁNTICA - Persona B
+    - Tabla de símbolos, recorrer sentencias en orden.
+    - Detectar variable no declarada y redeclaración (también en expresiones anidadas).
+    - En su propia declaración, la variable no está disponible.
+    - Errores semánticos con etapa, línea, columna y motivo.
+
+[ ] GENERACIÓN DE CÓDIGO - Persona B
+    - Recorrer AST y emitir archivo .py.
+    - Prefijo v_ para variables.
+    - Paréntesis en cada operación binaria para conservar agrupación.
+    - Literales en base 10.
+    - Importar automatas.py y llamar validar(modelo, cadena).
+    - No importar el compilador.
+    - No generar archivo si hay error de compilación.
+
+[ ] INTEGRACIÓN END-TO-END - Ambos
+    - python compilador.py ejemplos/demo.tc -o salida.py
+    - python salida.py
+    - Probar un ejemplo con validar afd y otro con validar afn.
+    - Verificar FUERA_DEL_ALFABETO en ejecución (no en compilación).
+
+[ ] PRUEBAS DEL COMPILADOR - Ambos
+    - 20 programas fuente distintos:
+        * 6 válidos: variables, prioridad, resta asociativa izquierda, paréntesis anidados, varias sentencias, cadena vacía en validación. Incluir aceptación y rechazo de cada validador.
+        * 4 errores léxicos: carácter no permitido, cadena sin cierre, otros.
+        * 4 errores sintácticos: falta ;, operando ausente, paréntesis sin pareja, tokens sobrantes.
+        * 4 errores semánticos: uso antes de declaración, redeclaración, variantes.
+        * 2 fuera del alfabeto: uno con afd y otro con afn (compilan y reportan al ejecutar).
+    - Registrar resultado esperado antes de ejecutar y resultado obtenido.
+    - Para errores: etapa, línea, columna y motivo.
+    - Para válidos: verificar que se genera código y salida coincide.
+    - Al menos un programa válido con secuencia completa: fuente, tokens, AST, tabla de símbolos, código generado y salida.
+    - Pruebas repetibles sin intervención manual.
+
+[ ] COMPLEJIDAD Y MEDICIONES - Persona A
+    - Variables de tamaño: caracteres, tokens, profundidad, longitud de cadena, estados del AFN.
+    - Costo temporal y memoria de lexer, parser, AST y generación (con supuestos).
+    - Explicar 2^|Q| subconjuntos posibles vs AFD construido; costo de construir vs usar.
+    - Medir compilación y ejecución por separado: 3 tamaños crecientes, >=5 repeticiones, mediana. Indicar entorno y qué incluye cada medición.
+    - Redactar 150-250 palabras sobre reconocimiento, traducción y terminación; por qué la parada no impide este compilador.
+
+[ ] REPORTE (6-8 páginas de contenido) - Ambos
+    - Especificación, continuidad Proyecto I, modelos y conversión, arquitectura.
+    - Evidencia completa de un programa.
+    - Resumen de pruebas, complejidad, límites y aportaciones.
+    - Tabla de componente del Proyecto I, modificación, ubicación y pruebas conservadas.
+    - Anexos para tablas extensas.
+
+[ ] README.md - Ambos
+    - Versión de Python probada.
+    - Comandos exactos de compilación, ejecución y pruebas.
+    - Cómo resolver importación de automatas.py.
+    - Sin rutas absolutas.
+
+[ ] 24 NOV: Versiones candidatas equipo e individual. Probar desde carpeta nueva (ZIP extraído).
+
+========================================================================
+FASE 3: 25 NOVIEMBRE - 4 DICIEMBRE (CIERRE Y ENTREGA)
+========================================================================
+
+[ ] 25 NOV: Congelar funcionalidad. Solo corregir bugs críticos.
+[ ] 26 NOV: Examen 3 (no desarrollo pesado).
+[ ] 27-30 NOV: Re-ejecutar 20 programas y 12 casos de regresión desde ZIP limpio. Guardar resultados verificables.
+[ ] 1 DIC: Generar ZIP final: código, autómatas como datos, automatas.py, 20 programas, salidas esperadas, código generado de ejemplo, material del Proyecto I y README.md.
+[ ] 2 DIC: Prueba de entrega desde carpeta nueva. Verificar PDF 6-8 páginas y nombres: EquipoXX_ProyectoII.pdf y EquipoXX_ProyectoII.zip.
+[ ] 3 DIC: Buffer final. Revisar checklist y rúbrica. Preparar subida.
+[ ] 4 DIC 23:59: Subir PDF y ZIP a Blackboard (equipo). Cada estudiante sube su SO1 individual en la actividad separada.
+
+========================================================================
+CHECKLIST FINAL ANTES DE ENTREGAR
+========================================================================
+[ ] Dos lenguajes del Proyecto I conservados y correcciones documentadas.
+[ ] Lexer, conversión, parser, AST, semántica y generación comprobables.
+[ ] ZIP incluye modelos, 20 programas, pruebas e instrucciones de ejecución.
+[ ] Cada estudiante leyó los 4 criterios de la rúbrica SO1.
+[ ] Cada estudiante preparó su informe SO1 en inglés y prototipo independiente.
+[ ] Cada entrega individual contiene evidencia de Identify, Formulate, Evaluate solutions y Apply resources.
+[ ] Equipo y cada estudiante verificaron ejecución desde carpeta nueva.
+[ ] Cada estudiante subirá sus archivos a SO1 antes de la calificación final.
+[ ] Examen 3: 26 nov. Entregas finales: 4 dic 2026, 23:59 h.
+========================================================================

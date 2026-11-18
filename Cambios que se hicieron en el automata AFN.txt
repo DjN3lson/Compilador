@@ -1,0 +1,75 @@
+============================================================
+CAMBIO AL AFN — VALIDACIÓN 0-255 EN LOS CUATRO OCTETOS
+============================================================
+
+MOTIVO
+------------------------------------------------------------
+El AFN original aceptaba direcciones como "300.1.2.25" porque
+solo validaba el rango 0-255 en el cuarto octeto. Los tres
+primeros octetos únicamente verificaban tener entre 1 y 3
+dígitos, sin importar su valor numérico. Esto no corresponde
+al comportamiento esperado de una dirección IPv4.
+
+Se optó por la Opción A: extender la validación 0-255 a los
+cuatro octetos, ya que el modelo se usará en el futuro.
+
+
+QUÉ SE MODIFICÓ
+------------------------------------------------------------
+1. Se eliminaron los subautómatas simplificados de los
+   octetos A, B y C (estados X0, X1, X2a, X2, X3a, X3b, X3).
+
+2. Se creó la función auxiliar agregar_octeto(prefijo,
+   es_ultimo, siguiente_inicial) que construye un
+   subautómata de 13 estados (X0 a X12) capaz de reconocer
+   enteros en [0, 255] sin ceros iniciales innecesarios.
+
+3. Los cuatro octetos se construyen con la misma función:
+   - A, B, C: sus estados X1..X12 transitan con "." al
+     inicio del siguiente octeto.
+   - D: sus estados X1..X12 son los estados de aceptación
+     del AFN.
+
+4. La función leeCadena NO se modificó. La corrección vive
+   en la definición del autómata, no en el simulador.
+
+5. Se actualizaron las celdas de markdown para reflejar que
+   los cuatro componentes deben estar en [0, 255].
+
+
+IMPACTO EN EL AUTÓMATA
+------------------------------------------------------------
+- Estados:        34  ->  52   (13 por octeto)
+- Transiciones:  195  ->  300
+- Estado inicial: A0 (sin cambios)
+- Estados finales: D1, D2, D3, D4, D5, D6, D7, D8, D9,
+                   D10, D11, D12 (sin cambios)
+- Nombres de estados homogéneos: A0..A12, B0..B12,
+  C0..C12, D0..D12.
+
+
+RESULTADO EN LAS PRUEBAS
+------------------------------------------------------------
+- "192.168.1.100"  -> ACEPTADA   (sin cambios)
+- "10.0.0.255"     -> ACEPTADA   (sin cambios)
+- "172.16.0.50"    -> ACEPTADA   (sin cambios)
+- "224.1.2.0"      -> ACEPTADA   (sin cambios)
+- "300.1.2.25"     -> RECHAZADA  (ANTES: ACEPTADA)  <-- corregido
+- "192.168.1.256"  -> RECHAZADA  (sin cambios)
+- "10.0.0.999"     -> RECHAZADA  (sin cambios)
+- "172.16.1.01"    -> RECHAZADA  (sin cambios)
+- "192.168.1"      -> RECHAZADA  (sin cambios)
+- "192.168.1.1000" -> RECHAZADA  (sin cambios)
+- ""              -> RECHAZADA  (sin cambios)
+- "192.168.A.255"  -> FUERA DEL ALFABETO (sin cambios)
+
+
+VENTAJAS PARA REUTILIZACIÓN FUTURA
+------------------------------------------------------------
+- Un solo constructor (agregar_octeto) parametriza prefijo,
+  si es octeto final y hacia dónde va el punto.
+- Cambiar el rango permitido requiere editar un único lugar.
+- Nombres de estados uniformes que facilitan depuración y
+  visualización del autómata.
+- El simulador permanece intacto y reutilizable para otros
+  AFN con la misma estructura de diccionario.

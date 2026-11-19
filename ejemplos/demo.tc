@@ -1,0 +1,6 @@
+let base = 2 + 3 * 4;
+let ajuste = (base - 4) * 2;
+mostrar(base);
+mostrar(ajuste);
+validar afd "192.168.1.1";
+validar afn "192.168.1.100";

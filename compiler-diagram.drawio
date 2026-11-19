@@ -1,0 +1,60 @@
+<mxfile host="65bd71144e">
+    <diagram id="0NtnW0-vk-Pw5rqzejMv" name="Page-1">
+        <mxGraphModel dx="674" dy="533" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="CFMk9wn2YGAXA16xnXLh-7" edge="1" parent="1" source="CFMk9wn2YGAXA16xnXLh-1" style="edgeStyle=none;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="CFMk9wn2YGAXA16xnXLh-4">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="CFMk9wn2YGAXA16xnXLh-16" edge="1" parent="1" source="CFMk9wn2YGAXA16xnXLh-1" style="edgeStyle=none;html=1;">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="400" y="130" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="CFMk9wn2YGAXA16xnXLh-1" parent="1" style="whiteSpace=wrap;html=1;" value="Tokenizer" vertex="1">
+                    <mxGeometry height="60" width="120" x="170" y="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="CFMk9wn2YGAXA16xnXLh-2" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="source code" vertex="1">
+                    <mxGeometry height="30" width="120" x="170" y="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="CFMk9wn2YGAXA16xnXLh-3" edge="1" parent="1" source="CFMk9wn2YGAXA16xnXLh-2" style="edgeStyle=none;html=1;entryX=0.56;entryY=0.003;entryDx=0;entryDy=0;entryPerimeter=0;" target="CFMk9wn2YGAXA16xnXLh-1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="CFMk9wn2YGAXA16xnXLh-8" edge="1" parent="1" source="CFMk9wn2YGAXA16xnXLh-4" style="edgeStyle=none;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="CFMk9wn2YGAXA16xnXLh-5">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="CFMk9wn2YGAXA16xnXLh-4" parent="1" style="whiteSpace=wrap;html=1;" value="Parser" vertex="1">
+                    <mxGeometry height="60" width="120" x="170" y="215" as="geometry"/>
+                </mxCell>
+                <mxCell id="CFMk9wn2YGAXA16xnXLh-9" edge="1" parent="1" source="CFMk9wn2YGAXA16xnXLh-5" style="edgeStyle=none;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="CFMk9wn2YGAXA16xnXLh-6">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="CFMk9wn2YGAXA16xnXLh-5" parent="1" style="whiteSpace=wrap;html=1;" value="Compiler" vertex="1">
+                    <mxGeometry height="60" width="120" x="170" y="330" as="geometry"/>
+                </mxCell>
+                <mxCell id="CFMk9wn2YGAXA16xnXLh-6" parent="1" style="whiteSpace=wrap;html=1;" value="Interpreter" vertex="1">
+                    <mxGeometry height="60" width="120" x="170" y="450" as="geometry"/>
+                </mxCell>
+                <mxCell id="CFMk9wn2YGAXA16xnXLh-10" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Tokens" vertex="1">
+                    <mxGeometry height="30" width="60" x="235" y="180" as="geometry"/>
+                </mxCell>
+                <mxCell id="CFMk9wn2YGAXA16xnXLh-11" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="AST" vertex="1">
+                    <mxGeometry height="30" width="60" x="240" y="280" as="geometry"/>
+                </mxCell>
+                <mxCell id="CFMk9wn2YGAXA16xnXLh-12" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="byetcode" vertex="1">
+                    <mxGeometry height="30" width="60" x="250" y="400" as="geometry"/>
+                </mxCell>
+                <mxCell id="CFMk9wn2YGAXA16xnXLh-13" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="program result" vertex="1">
+                    <mxGeometry height="30" width="100" x="180" y="530" as="geometry"/>
+                </mxCell>
+                <mxCell id="CFMk9wn2YGAXA16xnXLh-15" edge="1" parent="1" source="CFMk9wn2YGAXA16xnXLh-6" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.524;entryY=0.273;entryDx=0;entryDy=0;entryPerimeter=0;" target="CFMk9wn2YGAXA16xnXLh-13">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="CFMk9wn2YGAXA16xnXLh-17" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Acepta el source code y produce una secuencia lineal de tokens&amp;nbsp;" vertex="1">
+                    <mxGeometry height="30" width="220" x="410" y="115" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

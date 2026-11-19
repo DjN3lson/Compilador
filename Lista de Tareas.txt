@@ -20,7 +20,7 @@ FASE 1: 17-19 NOVIEMBRE (REVISIÓN FORMATIVA 19 NOV)
     - Actualizar reporte: quitar "último exactamente 0 o 255".
 Donde ver que se cumplio --> Cambios que se hicieron en el automata.txt
 
-[ 0/2 ] LEXER del compilador (.tc) - Persona A
+[ 2/2 ] LEXER del compilador (.tc) - Persona A
     - Tablas de transición explícitas para IDENT y NUM (recorrerlas, no regex).
     - Tokens con tipo, lexema, linea, columna (desde 1). Token EOF.
     - Palabras reservadas después de leer palabra completa (letx = IDENT).

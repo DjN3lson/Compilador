@@ -1,0 +1,21 @@
+=== CASOS VÁLIDOS ===
+[OK]   'let x = 2 + 3 * 4;'
+[OK]   'mostrar((x - 1) * (x + 1));'
+[OK]   'validar afd "192.168.1.1";'
+[OK]   'validar afn "";'
+[OK]   'let letx = 007;'
+[OK]   'validar afd "a\\"b\\\\c\\nd\\te\\rf";'
+[OK]   'variable_1 Variable'
+
+=== CASOS DE ERROR LÉXICO ===
+[OK]   'let x = 2 @ 3;'
+       -> Error léxico en línea 1, columna 11: caracter no permitido: '@'
+[OK]   'validar afd "abc;'
+       -> Error léxico en línea 1, columna 18: cadena sin cierre
+[OK]   'validar afd "a\\q";'
+       -> Error léxico en línea 1, columna 15: escape invalido: \q
+[OK]   'validar afd "linea\nquebrada";'
+       -> Error léxico en línea 1, columna 19: salto de linea dentro de cadena
+
+=== RESUMEN ===
+OK — 11/11 casos pasaron

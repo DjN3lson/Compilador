@@ -1,0 +1,15 @@
+FORMAT:
+INPUT
+OUTPUT
+
+py compilador.py --tokens .\ejemplos\err1.tc
+Error léxico en línea 1, columna 11: caracter no permitido: '@'
+
+py compilador.py --tokens .\ejemplos\err2.tc
+Error léxico en línea 1, columna 18: cadena sin cierre
+
+py compilador.py --tokens .\ejemplos\err3.tc
+Error léxico en línea 1, columna 15: escape invalido: \q
+
+py compilador.py --tokens .\ejemplos\err4.tc
+Error léxico en línea 1, columna 19: salto de linea dentro de cadena

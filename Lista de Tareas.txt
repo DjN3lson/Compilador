@@ -31,7 +31,7 @@ Donde ver que se cumplio --> Cambios que se hicieron en el automata.txt
     - Pruebas: >=4 errores léxicos (carácter no permitido, cadena sin cierre, escape inválido, salto de línea en cadena).
     - Opción CLI documentada: python compilador.py --tokens ejemplos/demo.tc
 
-[ 0/2 ] MÓDULO DE APOYO (automatas.py) - Persona A
+[ 1/2 ] MÓDULO DE APOYO (automatas.py) - Persona A
     - AFD original (IPv4) y AFN original (Opción A) como datos.
     - Simuladores: simular_afd() y simular_afn().
     - Convertir AFN a AFD por subconjuntos (algoritmo, no manual).

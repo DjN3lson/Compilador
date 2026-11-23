@@ -23,7 +23,7 @@ AFD_ORIGINAL={
 }
 
 for letra in ["A", "B", "C", "D"]:
-    for numero in range(1,13):
+    for numero in range(13):
         AFD_ORIGINAL["estados"].add(letra+str(numero))
 AFD_ORIGINAL["estados"].add("T")
 for numero in range(1,13):
@@ -123,7 +123,7 @@ def ejecutar(afd, cadenas):
     for simbolo in cadenas:
         if simbolo not in afd["alfabeto"]:
             return False
-        estado = afd["delta"][(estado,simbolo)]
+        estado = afd["delta"][(estado, simbolo)]
     return estado in afd["aceptacion"]
 
 def leeCadena(afn, cadena, debug=False):
@@ -202,7 +202,7 @@ def convertir_afn_a_afd(afn):
         return (0, int(nombre[1:]))
     
     return{
-        "estado": set(correspondencia.keys()),
+        "estados": set(correspondencia.keys()),
         "inicial":"S0",
         "alfabeto": set(afn["alfabeto"]),
         "aceptacion": aceptacion,
@@ -218,18 +218,18 @@ def validar(modelo, cadena):
     """
     modelo == "afd" --> AFD_ORIGINAL
     modelo == "afn" --> AFN_CONVERTIDO (subconjuntos del AFN)
-    devuelve "ACEPTA" | "RECHAZA" | "FUERA DEL ALFABETO" 
+    devuelve "ACEPTA" | "RECHAZA" | "FUERA_DEL_ALFABETO" 
     """
     if not isinstance(cadena, str):
         raise TypeError("cadena deber ser str")
     if modelo == "afd":
         aut = AFD_ORIGINAL
     elif modelo == "afn":
-        aut = AFN_ORIGINAL
+        aut = AFD_CONVERTIDO
     else:
         raise ValueError(f"modelo desconocido: {modelo!r}")
     if any(s not in aut["alfabeto"] for s in cadena):
-        return "FUERRA DEL ALFABETO"
+        return "FUERA_DEL_ALFABETO"
     return "ACEPTA" if ejecutar(aut, cadena) else "RECHAZA"
 
 #EVIDENCIA
@@ -290,7 +290,7 @@ def _regresion():
         ok = obtenido == esperado
         fallos += 0 if ok else 1
         marca ="OK " if ok else "FAIL"
-        print(f"marca={marca} cadena={cadena!r:25} esp={esperado:20} obt={obtenido}")
+        print(f"{marca} {cadena!r:25} {esperado:20} {obtenido}")
     print()
     
     print("=" * 78)
@@ -300,14 +300,14 @@ def _regresion():
     print("-" * 78)
     for cadena, esperado in casos_afn:
         if any(s not in AFN_ORIGINAL["alfabeto"] for s in cadena):
-            res_afn = "FUERA DEL ALFABETO"
+            res_afn = "FUERA_DEL_ALFABETO"
         else:
             res_afn = "ACEPTA" if leeCadena(AFN_ORIGINAL, cadena) else "RECHAZA"
         res_conv = validar("afn", cadena)
         ok = (res_afn == esperado == res_conv)
         fallos += 0 if ok else 1
         marca = "OK " if ok else "FAIL"
-        print(f"marca={marca} cadena={cadena!r:23} esp={esperado:20} res_afn={res_afn:12} res_conv={res_conv:12}")
+        print(f"{marca} {cadena!r:23} {esperado:20} {res_afn:12} {res_conv:12}")
     print()
     
     print("="*78)
@@ -316,6 +316,6 @@ def _regresion():
     else:
         print(f"Fallos: {fallos}")
     
-    if __name__ == "__main__":
-        _tabla_subconjuntos()
-        raise SystemExit(_regresion())
+if __name__ == "__main__":
+    _tabla_subconjuntos()
+    raise SystemExit(_regresion()) 

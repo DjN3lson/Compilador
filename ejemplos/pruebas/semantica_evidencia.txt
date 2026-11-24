@@ -1,0 +1,137 @@
+========================================================================
+CASO VÁLIDO — ejemplos/demo.tc
+========================================================================
+
+--- INPUT ---
+let base = 2 + 3 * 4;
+let ajuste = (base - 4) * 2;
+mostrar(base);
+mostrar(ajuste);
+validar afd "192.168.1.1";
+validar afn "192.168.1.100";
+
+--- COMANDO ---
+py semantica.py ejemplos/demo.tc
+
+--- OUTPUT ---
+
+Tabla de símbolos:
+Variable        tipo                linea
+--------------------------------
+base           int          1
+ajuste         int          2
+
+OK — análisis semántico sin errores (2 variables)
+
+--- OBSERVACIONES ---
+[x] Recorre las sentencias en orden.
+[x] Las validaciones no agregan variables a la tabla.
+[x] La tabla conserva el orden de declaración.
+[x] Todos los símbolos son de tipo int.
+
+========================================================================
+ERROR 1 — USO ANTES DE DECLARACIÓN (sem1.tc)
+========================================================================
+
+--- INPUT ---
+mostrar(x);
+
+--- COMANDO ---
+py semantica.py sem1.tc
+
+--- OUTPUT ---
+Error semántico en línea 1, columna 9: variable no declarada: 'x'
+
+--- CLASIFICACIÓN ---
+Etapa   : semántica
+Línea   : 1
+Columna : 9 (posición del identificador 'x')
+Motivo  : se usa 'x' sin haber sido declarada.
+Categoría del PDF: "Uso antes de declaración".
+
+========================================================================
+ERROR 2 — REDECLARACIÓN (sem2.tc)
+========================================================================
+
+--- INPUT ---
+let x = 1;
+let x = 2;
+
+--- COMANDO ---
+py semantica.py sem2.tc
+
+--- OUTPUT ---
+Error semántico en línea 2, columna 1: redeclaración de la variable 'x' (ya declarada en línea 1)
+
+--- CLASIFICACIÓN ---
+Etapa   : semántica
+Línea   : 2
+Columna : 1 (posición de la segunda 'let')
+Motivo  : 'x' ya existe en la tabla de símbolos.
+Categoría del PDF: "Redeclaración".
+
+========================================================================
+ERROR 3 — VARIABLE NO DISPONIBLE EN SU PROPIA DECLARACIÓN (sem3.tc)
+========================================================================
+
+--- INPUT (tras corregir typo 'lex' -> 'let') ---
+let x = x + 1;
+
+--- COMANDO ---
+py semantica.py sem3.tc
+
+--- OUTPUT ESPERADO (tras corrección) ---
+Error semántico en línea 1, columna 9: variable no declarada: 'x'
+
+--- CLASIFICACIÓN ---
+Etapa   : semántica
+Línea   : 1
+Columna : 9 (posición del 'x' de la expresión)
+Motivo  : el identificador 'x' aparece en su propia declaración
+          antes de ser agregado a la tabla.
+Categoría del PDF: variante de "Uso antes de declaración"
+                   dentro de la expresión de la declaración.
+
+--- NOTA ---
+En la primera corrida, sem3.tc contenía 'lex x = x + 1;'
+(typo: 'lex' en lugar de 'let'). El parser lo detectó
+correctamente como error sintáctico, lo cual confirma la
+separación de etapas. El archivo se corrigió y la corrida
+final reporta el error semántico esperado.
+
+========================================================================
+ERROR 4 — VARIABLE NO DECLARADA EN EXPRESIÓN ANIDADA (sem4.tc)
+========================================================================
+
+--- INPUT ---
+let x = 1;
+mostrar(x + y);
+
+--- COMANDO ---
+py semantica.py sem4.tc
+
+--- OUTPUT ---
+Error semántico en línea 2, columna 13: variable no declarada: 'y'
+
+--- CLASIFICACIÓN ---
+Etapa   : semántica
+Línea   : 2
+Columna : 13 (posición del identificador 'y')
+Motivo  : 'y' no está en la tabla aunque 'x' sí.
+Categoría del PDF: variante de "variable no declarada" dentro
+                   de una expresión binaria anidada.
+
+========================================================================
+RESUMEN — 4 CATEGORÍAS DEL PDF CUBIERTAS
+========================================================================
+[x] Uso antes de declaración                 -> sem1.tc
+[x] Redeclaración                            -> sem2.tc
+[x] Variante en propia declaración           -> sem3.tc
+[x] Variante en expresión anidada            -> sem4.tc
+
+Los 4 errores:
+- Reportan etapa, línea, columna y motivo.
+- No muestran traceback.
+- Son reproducibles con comandos exactos.
+- Son detectados por semantica.py, no por lexer ni parser
+  (separación de etapas correcta).

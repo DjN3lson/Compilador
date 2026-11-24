@@ -42,7 +42,7 @@ Donde ver que se cumplio --> Cambios que se hicieron en el automata.txt
     - Pruebas de regresión: 12 casos por modelo (5 aceptadas, 5 rechazadas, vacía, fuera del alfabeto).
     - Comparar esperado vs AFN original vs AFD convertido.
 
-[ 0/2 ] PARSER Y AST (versión inicial) - Persona B
+[ 2/2 ] PARSER Y AST (versión inicial) - Persona B
     - Parser descendente recursivo según EBNF.
     - Consumir entrada completa.
     - Nodos: programa, declaración, salida, validación, operación binaria, literal entero, referencia a variable.

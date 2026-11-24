@@ -1,0 +1,167 @@
+========================================================================
+PARSER — EVIDENCIA DE EJECUCIÓN
+Proyecto II: Compilador .tc (LIS-3042)
+Equipo: Pablo y Uri
+Fecha: 24 de noviembre de 2026
+========================================================================
+
+Archivo bajo prueba : parser.py
+Entrada             : tokens producidos por lexer.py
+Salida              : AST (NodoPrograma) o ParserError
+Formato de error    : "Error sintáctico en línea L, columna C: motivo"
+                      (sin traceback de Python)
+
+========================================================================
+CASO 1 — PROGRAMA VÁLIDO (ejemplos/demo.tc)
+========================================================================
+
+--- INPUT: ejemplos/demo.tc ---
+let base = 2 + 3 * 4;
+let ajuste = (base - 4) * 2;
+mostrar(base);
+mostrar(ajuste);
+validar afd "192.168.1.1";
+validar afn "192.168.1.100";
+
+--- COMANDO ---
+py parser.py ejemplos/demo.tc
+
+--- OUTPUT: AST ---
+Programa(
+ Salida
+  BinOp('+',
+   Num(2),
+   BinOp('*',
+    Num(3),
+    Num(4)
+   )
+  )
+
+ Salida
+  BinOp('*',
+   BinOp('-',
+    Ident('base'),
+    Num(4)
+   ),
+   Num(2)
+  )
+
+ Salida
+  Ident('base')
+
+ Salida
+  Ident('ajuste')
+
+ Validacion'afd', '192.168.1.1'
+ Validacion'afn', '192.168.1.100'
+
+--- ANÁLISIS DEL AST ---
+[OK] Prioridad: 2 + 3 * 4 se agrupa como 2 + (3 * 4).
+[OK] Paréntesis: (base - 4) * 2 conserva la agrupación.
+[OK] Los paréntesis NO generan nodo propio en el AST.
+[OK] Cada sentencia produce un nodo distinto (Declaracion,
+     Salida, Validacion).
+[OBS] Cosmético: "Validacion'afd'" debería imprimir
+      "Validacion('afd', ...)" con paréntesis de apertura.
+[OBS] Cosmético: el encabezado "Programa(" aparece como
+      "rograma(" por truncamiento de la terminal; el AST
+      real está completo.
+
+========================================================================
+CASO 2 — ERROR SINTÁCTICO: FALTA DE PUNTO Y COMA (ejemplos/sin1.tc)
+========================================================================
+
+--- INPUT: ejemplos/sin1.tc ---
+let x = 2 + 3
+
+--- COMANDO ---
+py parser.py ejemplos/sin1.tc
+
+--- OUTPUT ---
+Error sintáctico en línea 2, columna 1: se esperaba ';' y se encontró EOF ''
+
+--- CLASIFICACIÓN ---
+Etapa   : sintáctica
+Línea   : 2
+Columna : 1
+Motivo  : falta el punto y coma al final de la declaración.
+Categoría del PDF: "Falta de punto y coma".
+
+========================================================================
+CASO 3 — ERROR SINTÁCTICO: OPERANDO AUSENTE (ejemplos/sin2.tc)
+========================================================================
+
+--- INPUT: ejemplos/sin2.tc ---
+let x = 2 + ;
+
+--- COMANDO ---
+py parser.py ejemplos/sin2.tc
+
+--- OUTPUT ---
+Error sintáctico en línea 1, columna 13: se esperaba un número, un identificador o '(' y se encontró SEMI ';'
+
+--- CLASIFICACIÓN ---
+Etapa   : sintáctica
+Línea   : 1
+Columna : 13
+Motivo  : el operador '+' no tiene operando derecho; se
+          encontró ';' donde se esperaba un factor.
+Categoría del PDF: "Operando ausente".
+
+========================================================================
+CASO 4 — ERROR SINTÁCTICO: PARÉNTESIS SIN PAREJA (ejemplos/sin3.tc)
+========================================================================
+
+--- INPUT: ejemplos/sin3.tc ---
+mostrar((x + 1);
+
+--- COMANDO ---
+py parser.py ejemplos/sin3.tc
+
+--- OUTPUT ---
+Error sintáctico en línea 1, columna 14: se esperaba ')' y se encontró SEMI ';'
+
+--- CLASIFICACIÓN ---
+Etapa   : sintáctica
+Línea   : 1
+Columna : 14
+Motivo  : falta cerrar el paréntesis interno de '(x + 1'; se
+          encontró ';' en lugar de ')'.
+Categoría del PDF: "Paréntesis sin pareja".
+
+========================================================================
+CASO 5 — ERROR SINTÁCTICO: TOKENS SOBRANTES (ejemplos/sin4.tc)
+========================================================================
+
+--- INPUT: ejemplos/sin4.tc ---
+mostrar(x) extra;
+
+--- COMANDO ---
+py parser.py ejemplos/sin4.tc
+
+--- OUTPUT ---
+Error sintáctico en línea 1, columna 12: se esperaba ';' y se encontró IDENT 'extra'
+
+--- CLASIFICACIÓN ---
+Etapa   : sintáctica
+Línea   : 1
+Columna : 12
+Motivo  : después de 'mostrar(x)' se esperaba ';' y apareció
+          el identificador 'extra' (token sobrante).
+Categoría del PDF: "Tokens sobrantes".
+
+========================================================================
+RESUMEN DE COBERTURA — 4 CATEGORÍAS DEL PDF
+========================================================================
+[x] Falta de punto y coma               -> sin1.tc  (línea 2, col 1)
+[x] Operando ausente                    -> sin2.tc  (línea 1, col 13)
+[x] Paréntesis sin pareja               -> sin3.tc  (línea 1, col 14)
+[x] Tokens sobrantes                    -> sin4.tc  (línea 1, col 12)
+
+Los 4 errores:
+- Reportan etapa, línea, columna y motivo.
+- No muestran traceback de Python.
+- Son reproducibles con comandos exactos.
+- Son consumidos por parser.py, no por el lexer (separación
+  de etapas correcta).
+

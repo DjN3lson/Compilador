@@ -59,7 +59,7 @@ Donde ver que se cumplio --> Cambios que se hicieron en el automata.txt
 FASE 2: 20-24 NOVIEMBRE (VERSIONES CANDIDATAS 24 NOV)
 ========================================================================
 
-[ 0/2 ] SEMÁNTICA - Persona B
+[ 2/2 ] SEMÁNTICA - Persona B
     - Tabla de símbolos, recorrer sentencias en orden.
     - Detectar variable no declarada y redeclaración (también en expresiones anidadas).
     - En su propia declaración, la variable no está disponible.

@@ -4,7 +4,7 @@ import sys
 from lexer import tokenizar, LexerError
 from parser import parsear, ast_a_texto, ParserError
 from semantica import analizar, SemanticError, formato_table
-# from generador import generar, GeneradorError
+from generador import generar, GeneradorError
 
 
 def main():
@@ -64,22 +64,22 @@ def main():
         return 0
 
     # ---------- 4. GENERACIÓN ----------
-    # try:
-    #     codigo = generar(ast)
-    # except GeneradorError as e:
-    #     print(e)
-    #     return 1
+    try:
+        codigo = generar(ast)
+    except GeneradorError as e:
+        print(e)
+        return 1
 
     # ---------- 5. ESCRIBIR SALIDA ----------
     # Solo aquí, después de que TODAS las etapas pasaron,
     # se escribe el archivo. Si algo falló antes, salida.py
     # no se crea ni se sobrescribe.
-    # try:
-    #     with open(args.salida, "w", encoding="utf-8") as f:
-    #         f.write(codigo)
-    # except OSError as e:
-    #     print(f"Error al escribir {args.salida}: {e}")
-    #     return 1
+    try:
+        with open(args.salida, "w", encoding="utf-8") as f:
+            f.write(codigo)
+    except OSError as e:
+        print(f"Error al escribir {args.salida}: {e}")
+        return 1
 
     print(f"OK — {args.salida} generado")
     return 0

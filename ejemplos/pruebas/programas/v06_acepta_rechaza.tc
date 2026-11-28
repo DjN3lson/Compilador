@@ -1,0 +1,4 @@
+validar afd "192.168.1.1";
+validar afd "300.1.1.1";
+validar afn "192.168.1.100";
+validar afn "300.1.2.25";

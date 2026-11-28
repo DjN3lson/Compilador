@@ -65,7 +65,7 @@ FASE 2: 20-24 NOVIEMBRE (VERSIONES CANDIDATAS 24 NOV)
     - En su propia declaración, la variable no está disponible.
     - Errores semánticos con etapa, línea, columna y motivo.
 
-[ 0/2 ] GENERACIÓN DE CÓDIGO - Persona B
+[ 2/2 ] GENERACIÓN DE CÓDIGO - Persona B
     - Recorrer AST y emitir archivo .py.
     - Prefijo v_ para variables.
     - Paréntesis en cada operación binaria para conservar agrupación.
@@ -74,7 +74,7 @@ FASE 2: 20-24 NOVIEMBRE (VERSIONES CANDIDATAS 24 NOV)
     - No importar el compilador.
     - No generar archivo si hay error de compilación.
 
-[ 0/2 ] INTEGRACIÓN END-TO-END - Ambos
+[ 2/2 ] INTEGRACIÓN END-TO-END - Ambos
     - python compilador.py ejemplos/demo.tc -o salida.py
     - python salida.py
     - Probar un ejemplo con validar afd y otro con validar afn.

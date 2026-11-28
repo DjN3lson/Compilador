@@ -1,0 +1,254 @@
+==============================================================================
+REPORTE DE PRUEBAS — COMPILADOR .tc
+==============================================================================
+
+Total: 20/20 OK
+
+[OK] v01_prioridad
+  Categoría: valido
+  Fuente:
+let base = 2 + 3 * 4;
+mostrar(base);
+
+  Justificación: El producto tiene prioridad sobre la suma: 2 + (3*4) = 14.
+  Salida obtenida: '14\n'
+
+[OK] v02_resta_izq
+  Categoría: valido
+  Fuente:
+mostrar(8 - 3 - 1);
+
+  Justificación: Operadores de igual prioridad asociativos por izquierda: (8-3)-1 = 4.
+  Salida obtenida: '4\n'
+
+[OK] v03_anidados
+  Categoría: valido
+  Fuente:
+mostrar(2 * (3 + (4 - 1)));
+
+  Justificación: Paréntesis anidados: (4-1)=3, 3+3=6, 2*6=12.
+  Salida obtenida: '12\n'
+
+[OK] v04_varias
+  Categoría: valido
+  Fuente:
+let a = 10;
+let b = a * 2;
+mostrar(a + b);
+validar afd "192.168.1.1";
+
+  Justificación: Múltiples sentencias: b=20, a+b=30, IPv4 válida -> ACEPTA.
+  Salida obtenida: '30\nACEPTA\n'
+
+[OK] v05_cadena_vacia
+  Categoría: valido
+  Fuente:
+validar afd "";
+validar afn "";
+
+  Justificación: La cadena vacía no es IPv4 válida (faltan 4 octetos).
+  Salida obtenida: 'RECHAZA\nRECHAZA\n'
+
+[OK] v06_acepta_rechaza
+  Categoría: valido
+  Fuente:
+validar afd "192.168.1.1";
+validar afd "300.1.1.1";
+validar afn "192.168.1.100";
+validar afn "300.1.2.25";
+
+  Justificación: Aceptación y rechazo de ambos validadores. AFN corregido rechaza primer octeto > 255.
+  Salida obtenida: 'ACEPTA\nRECHAZA\nACEPTA\nRECHAZA\n'
+
+[OK] 101_caracter
+  Categoría: lexico
+  Fuente:
+let x = 2 @ 3;
+
+  Justificación: @ no pertenece al alfabeto del lenguaje.
+  Resultado obtenido: "Error léxico en línea 1, columna 11: caracter no permitido: '@'"
+
+[OK] l02_sin_cierre
+  Categoría: lexico
+  Fuente:
+validar afd "abc;
+  Justificación: Comilla de apertura sin comilla de cierre.
+  Resultado obtenido: 'Error léxico en línea 1, columna 18: cadena sin cierre'
+
+[OK] l03_escape
+  Categoría: lexico
+  Fuente:
+validar afd "a\q";
+
+  Justificación: \q no es un escape permitido (solo \" \\ \n \t \r).
+  Resultado obtenido: 'Error léxico en línea 1, columna 15: escape invalido: \\q'
+
+[OK] l04_salto
+  Categoría: lexico
+  Fuente:
+validar afd "linea
+quebrada";
+
+  Justificación: No se permiten saltos de línea literales dentro de cadenas.
+  Resultado obtenido: 'Error léxico en línea 1, columna 19: salto de linea dentro de cadena'
+
+[OK] s01_sin_punto_coma
+  Categoría: sintactico
+  Fuente:
+let x = 2 + 3
+
+  Justificación: Falta el ';' al final de la declaración.
+  Resultado obtenido: "Error sintactico en linea 2, columna 1: se esperaba ';' y se encontro EOF ''"
+
+[OK] so2_operando
+  Categoría: sintactico
+  Fuente:
+let x = 2 + ;
+
+  Justificación: el operador '+' no tiene operando derecho
+  Resultado obtenido: "Error sintactico en linea 1, columna 13: se esperaba un número, un identificador o '(' y se encontró SEMI ';'"
+
+[OK] so3_operando
+  Categoría: sintactico
+  Fuente:
+let x = 1;
+mostrar((x + 1);
+  Justificación: Falta cerrar el paréntesis interno de (x + 1.
+  Resultado obtenido: "Error sintactico en linea 2, columna 16: se esperaba ')' y se encontro SEMI ';'"
+
+[OK] so4_operando
+  Categoría: sintactico
+  Fuente:
+let x = 1;
+mostrar(x) extra;
+
+  Justificación: Despues de mostrar(x) aparece 'extra' antes del ';'
+  Resultado obtenido: "Error sintactico en linea 2, columna 12: se esperaba ';' y se encontro IDENT 'extra'"
+
+[OK] m01_no_declarada
+  Categoría: semantico
+  Fuente:
+mostrar(x);
+
+  Justificación: 'x' se usa sin haber sido declarada.
+  Resultado obtenido: "Error semántico en línea 1, columna 9: variable no declarada: 'x'"
+
+[OK] m02_redeclaracion
+  Categoría: semantico
+  Fuente:
+let x = 1;
+let x = 2;
+
+  Justificación: 'x' ya existe en la tabla de símbolos.
+  Resultado obtenido: "Error semántico en línea 2, columna 1: redeclaración de la variable 'x' (ya declarada en línea 1)"
+
+[OK] m03_propia
+  Categoría: semantico
+  Fuente:
+let x = x + 1;
+
+  Justificación: 'x' no está disponible en su propia declaración.
+  Resultado obtenido: "Error semántico en línea 1, columna 9: variable no declarada: 'x'"
+
+[OK] m04_anidada
+  Categoría: semantico
+  Fuente:
+let a = 1;
+mostrar(a + b);
+
+  Justificación: 'b' no está declarada aunque 'a' sí.
+  Resultado obtenido: "Error semántico en línea 2, columna 13: variable no declarada: 'b'"
+
+[OK] a01_afd
+  Categoría: fuera_alfabeto
+  Fuente:
+validar afd "192.168.A.1";
+
+  Justificación: Compila; al ejecutar, 'A' no pertenece al alfabeto {0-9,.} del AFD.
+  Salida obtenida: 'FUERA_DEL_ALFABETO\n'
+
+[OK] a02_afn
+  Categoría: fuera_alfabeto
+  Fuente:
+validar afn "192.168.A.255";
+
+  Justificación: Compila; al ejecutar, 'A' no pertenece al alfabeto del AFN convertido.
+  Salida obtenida: 'FUERA_DEL_ALFABETO\n'
+
+
+==============================================================================
+SECUENCIA COMPLETA — v04_varias
+==============================================================================
+
+--- FUENTE (.tc) ---
+let a = 10;
+let b = a * 2;
+mostrar(a + b);
+validar afd "192.168.1.1";
+
+--- TOKENS ---
+TIPO       LEXEMA               LINEA  COL
+LET        'let'                    1    1
+IDENT      'a'                      1    5
+EQUAL      '='                      1    7
+NUM        '10'                     1    9
+SEMI       ';'                      1   11
+LET        'let'                    2    1
+IDENT      'b'                      2    5
+EQUAL      '='                      2    7
+IDENT      'a'                      2    9
+STAR       '*'                      2   11
+NUM        '2'                      2   13
+SEMI       ';'                      2   14
+MOSTRAR    'mostrar'                3    1
+LPAREN     '('                      3    8
+IDENT      'a'                      3    9
+PLUS       '+'                      3   11
+IDENT      'b'                      3   13
+RPAREN     ')'                      3   14
+SEMI       ';'                      3   15
+VALIDAR    'validar'                4    1
+AFD        'afd'                    4    9
+CADENA     '192.168.1.1'            4   13
+SEMI       ';'                      4   26
+EOF        ''                       5    1
+
+--- AST ---
+Programa(
+ Salida
+  Num(10)
+ 
+ Salida
+  BinOp('*',
+   Ident('a'),
+   Num(2)
+  )
+ 
+ Salida
+  BinOp('+',
+   Ident('a'),
+   Ident('b')
+  )
+ 
+ Validacion'afd', '192.168.1.1'
+
+--- TABLA DE SIMBOLOS ---
+Variable        tipo                linea
+--------------------------------
+a              int          1
+b              int          2
+
+--- CODIGO GENERADO (salida.py) ---
+# Archivo generado automáticamente por el compilador .tc
+# No editar a mano.
+from automatas import validar
+
+v_a = 10
+v_b = (v_a * 2)
+print((v_a + v_b))
+print(validar('afd', '192.168.1.1'))
+
+---SALIDA (py salida.py) -- 
+30
+ACEPTA
+

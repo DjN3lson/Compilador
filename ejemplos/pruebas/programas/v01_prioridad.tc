@@ -1,0 +1,2 @@
+let base = 2 + 3 * 4;
+mostrar(base);

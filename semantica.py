@@ -88,7 +88,7 @@ def analizar(programa):
     """Devuelve la tabla de símbolos {nombre: linea}. Lanza SemanticError."""
     return AnalizadorSemanticos().analizar(programa)
 
-def formato_table(tabla):
+def formato_tabla(tabla):
     if not tabla:
         return " (vacia)"
     lineas = [f"{'Variable':15} {'tipo':18} {'linea':>6}"]
@@ -115,7 +115,7 @@ if __name__ == "__main__":
         ast = parsear(tokens)
         tabla = analizar(ast)
         print("Tabla de símbolos:")
-        print(formato_table(tabla))
+        print(formato_tabla(tabla))
         print()
         print(f"OK — análisis semántico sin errores ({len(tabla)} variables)")
     except LexerError as e:

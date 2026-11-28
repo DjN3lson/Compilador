@@ -3,7 +3,7 @@ import sys
 
 from lexer import tokenizar, LexerError
 from parser import parsear, ast_a_texto, ParserError
-from semantica import analizar, SemanticError, formato_table
+from semantica import analizar, SemanticError, formato_tabla
 from generador import generar, GeneradorError
 
 
@@ -60,7 +60,7 @@ def main():
         return 1
 
     if args.tabla:
-        print(formato_table(tabla))
+        print(formato_tabla(tabla))
         return 0
 
     # ---------- 4. GENERACIÓN ----------

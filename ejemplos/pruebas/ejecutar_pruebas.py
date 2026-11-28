@@ -12,8 +12,8 @@ import subprocess
 import sys
 import unicodedata
 
-BASE = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-PRUEBAS = os.path.dirname(os.path.abspath(__file__))
+PRUEBAS = os.path.dirname(os.path.abspath(__file__))          # <root>/ejemplos/pruebas
+BASE = os.path.dirname(os.path.dirname(PRUEBAS))            
 PROGRAMAS = os.path.join(PRUEBAS, "programas")
 
 def norm(s):

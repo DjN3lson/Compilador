@@ -21,7 +21,7 @@ import sys
 import time
 
 BASE = os.path.dirname(os.path.abspath(__file__))
-PRUEBAS = os.path.join(BASE, "ejemplos/pruebas")
+PRUEBAS = os.path.join(BASE, "ejemplos", "pruebas")
 BENCH = os.path.join(PRUEBAS, "benchmark")
 
 REPETICIONES = 5
@@ -191,13 +191,7 @@ def main():
     escal = analisis_escalamiento(mediciones)
 
     reporte = (
-        "=" * 78 + "\n"
-        "BENCHMARK — COMPILACIÓN vs EJECUCIÓN\n"
-        "Proyecto II: Compilador .tc (LIS-3042)\n"
-        "Equipo: Pablo y Uri\n"
-        "=" * 78 + "\n\n"
-        "ENTORNO\n" + "-" * 78 + "\n" + entorno() + "\n\n"
-
+        "BENCHMARK\n"
         "FAMILIA DE PROGRAMAS\n" + "-" * 78 + "\n"
         "  let v1 = 1 + 1 * 2;\n"
         "  ...\n"

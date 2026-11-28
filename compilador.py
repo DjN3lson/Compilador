@@ -81,7 +81,7 @@ def main():
         print(f"Error al escribir {args.salida}: {e}")
         return 1
 
-    print(f"OK — {args.salida} generado")
+    print(f"OK - {args.salida} generado")
     return 0
 
 

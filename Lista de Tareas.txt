@@ -80,7 +80,7 @@ FASE 2: 20-24 NOVIEMBRE (VERSIONES CANDIDATAS 24 NOV)
     - Probar un ejemplo con validar afd y otro con validar afn.
     - Verificar FUERA_DEL_ALFABETO en ejecución (no en compilación).
 
-[ 0/2 ] PRUEBAS DEL COMPILADOR - Ambos
+[ 2/2 ] PRUEBAS DEL COMPILADOR - Ambos
     - 20 programas fuente distintos:
         * 6 válidos: variables, prioridad, resta asociativa izquierda, paréntesis anidados, varias sentencias, cadena vacía en validación. Incluir aceptación y rechazo de cada validador.
         * 4 errores léxicos: carácter no permitido, cadena sin cierre, otros.
